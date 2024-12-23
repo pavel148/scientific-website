@@ -1,7 +1,9 @@
 package com.example.uni_dubna.service;
 
 import com.example.uni_dubna.models.Role;
+import com.example.uni_dubna.models.ScientificUser;
 import com.example.uni_dubna.repo.RoleRepository;
+import com.example.uni_dubna.repo.ScientificUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -14,10 +16,12 @@ import java.util.List;
 
 public class RoleService {
     private final RoleRepository roleRepository;
+    private final ScientificUserRepository scientificUserRepository;
 
     @Autowired
-    public RoleService(RoleRepository roleRepository) {
+    public RoleService(RoleRepository roleRepository, ScientificUserRepository scientificUserRepository) {
         this.roleRepository = roleRepository;
+        this.scientificUserRepository = scientificUserRepository;
     }
     // Список ролей по умолчанию
     private static final String[] DEFAULT_ROLES = {"ROLE_ADMIN", "ROLE_REVIEWER", "ROLE_AUTHOR", "ROLE_SYS_ADMIN","ROLE_USER"};
@@ -63,5 +67,18 @@ public class RoleService {
 
     public List<Role> getAllRoles() {
         return roleRepository.findAll(); // Здесь вы получаете все роли
+    }
+
+    public List<ScientificUser> getAllUsers() {
+        return scientificUserRepository.findAll();
+    }
+
+    public void assignRoleToUser(Long userId, Long roleId) {
+        ScientificUser user = scientificUserRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new IllegalArgumentException("Роль не найдена"));
+        user.setRole(role);
+        scientificUserRepository.save(user);
     }
 }

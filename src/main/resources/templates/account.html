@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Личный Кабинет</title>
+</head>
+<body>
+<div th:replace="layout :: content">
+    <h1>Личный Кабинет</h1>
+
+    <!-- Отображение ошибок и сообщений -->
+    <div th:if="${error}">
+        <p th:text="${error}"></p>
+    </div>
+    <div th:if="${success}">
+        <p th:text="${success}"></p>
+    </div>
+
+    <form th:action="@{/account/update}" th:object="${user}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+        <div>
+            <label for="username">Имя пользователя:</label>
+            <input type="text" id="username" th:field="*{username}" required />
+            <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Ошибка имени пользователя</div>
+        </div>
+
+        <!-- Добавьте дополнительные поля по необходимости -->
+
+        <button type="submit">Обновить</button>
+    </form>
+</div>
+</body>
+</html>

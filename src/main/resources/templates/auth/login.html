@@ -1,45 +1,39 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <title>Вход</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--<h1>Вход в систему</h1>-->
-
-<!--&lt;!&ndash; Добавим обработку ошибок &ndash;&gt;-->
-<!--<div th:if="${param.error}">-->
-<!--    <p style="color:red;">Неверные данные для входа</p>-->
-<!--</div>-->
-
-<!--<form name="f" method="post" action="/auth/process_login">-->
-<!--    <label for="username">Имя пользователя:</label>-->
-<!--    <input type="text" id="username" name="username" required>-->
-<!--    <br>-->
-<!--    <label for="password">Пароль:</label>-->
-<!--    <input type="password" id="password" name="password" required>-->
-<!--    <br>-->
-<!--    <button type="submit" value="Login">Войти</button>-->
-<!--</form>-->
-<!--</body>-->
-<!--</html>-->
-
-
-
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Авторизация</title>
+    <style>
+        /* Добавьте простой стиль для лучшего отображения */
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .error-message {
+            color: red;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
     <h2>Вход в систему</h2>
 
-    <form action="#" th:action="@{/auth/login}" method="POST">
+    <form th:action="@{/auth/process_login}" method="POST">
         <div class="form-group">
             <label for="username">Имя пользователя:</label>
             <input type="text" id="username" name="username" required="required" placeholder="Введите имя пользователя">
@@ -53,8 +47,12 @@
         <button type="submit">Войти</button>
     </form>
 
-    <!-- Ссылка на страницу регистрации -->
     <p>Нет аккаунта? <a href="/auth/register">Зарегистрироваться</a></p>
+
+    <!-- Ошибка при авторизации (если есть) -->
+    <div th:if="${param.error}">
+        <p class="error-message">Неверное имя пользователя или пароль.</p>
+    </div>
 </div>
 </body>
 </html>

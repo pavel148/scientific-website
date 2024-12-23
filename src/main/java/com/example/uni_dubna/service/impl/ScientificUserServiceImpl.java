@@ -1,70 +1,89 @@
-package com.example.uni_dubna.service;
+package com.example.uni_dubna.service.impl;
 
 import com.example.uni_dubna.models.Role;
 import com.example.uni_dubna.models.ScientificUser;
 import com.example.uni_dubna.repo.RoleRepository;
 import com.example.uni_dubna.repo.ScientificUserRepository;
+import com.example.uni_dubna.security.CustomUserDetails;
+import com.example.uni_dubna.service.interfaces.ScientificUserService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Optional;
 
 @Service
-public class ScientificUserService {
+public class ScientificUserServiceImpl implements ScientificUserService {
 
     private final ScientificUserRepository scientificUserRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ScientificUserService(ScientificUserRepository scientificUserRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public ScientificUserServiceImpl(ScientificUserRepository scientificUserRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
         this.scientificUserRepository = scientificUserRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Override
     @Transactional
-    public void registerUser(String login, String password) {
-        // Проверка входных данных
-        if (login == null || login.trim().isEmpty()) {
-            throw new IllegalArgumentException("Login cannot be empty");
-        }
-        if (password == null || password.trim().isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be empty");
-        }
+    public void registerUser(ScientificUser scientificUser) {
+        String encodedPassword = passwordEncoder.encode(scientificUser.getPassword());
+        scientificUser.setPassword(encodedPassword);
 
-        // Шифрование пароля
-        String encodedPassword = passwordEncoder.encode(password);
-
-        // Проверка существования пользователя с данным логином
-        if (scientificUserRepository.existsByUsername(login)) {
-            throw new IllegalArgumentException("User with this username already exists.");
-        }
-
-        // Создание пользователя
-        ScientificUser user = new ScientificUser();
-        user.setUsername(login);
-        user.setPassword(encodedPassword);
-
-        // Назначение роли пользователю
+        // Проверка на существование роли пользователя
         Role defaultRole = roleRepository.findByName("ROLE_USER");
         if (defaultRole == null) {
+            // Если роль не существует, создаем новую роль
             defaultRole = new Role();
             defaultRole.setName("ROLE_USER");
             roleRepository.save(defaultRole);
         }
 
-        // Назначаем роль как одиночное поле (не Set)
-        user.setRole(defaultRole);
+        // Устанавливаем роль для пользователя
+        scientificUser.setRole(defaultRole);
 
-        // Сохраняем пользователя в базе данных
-        scientificUserRepository.save(user);
+        // Сохраняем пользователя с ролью
+        scientificUserRepository.save(scientificUser);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean existsByUsername(String username) {
+        return scientificUserRepository.existsByUsername(username);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ScientificUser findByUsername(String username) {
+        return scientificUserRepository.findByUsernameWithRole(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    @Override
+    @Transactional
+    public void updateUser(String username, ScientificUser updatedUser) {
+        ScientificUser existingUser = scientificUserRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        existingUser.setUsername(updatedUser.getUsername());
+        // Обновите другие поля при необходимости
+
+        scientificUserRepository.save(existingUser);
+    }
+
+    /**
+     * Проверяет, существует ли пользователь с заданным именем пользователя.
+     *
+     * @param username имя пользователя для проверки
+     * @return true, если пользователь существует, иначе false
+     */
+
 
     // Метод с ролью по умолчанию (ROLE_USER)
     public ScientificUser createScientificUser(String login, String password) {
@@ -84,11 +103,6 @@ public class ScientificUserService {
         // Сохраняем пользователя
         user = scientificUserRepository.save(user);
 
-        // Проверка, что пользователь был сохранен
-        if (user.getId() == null) {
-            throw new RuntimeException("User creation failed. ID is null.");
-        }
-
         // Назначение роли
         Role defaultRole = roleRepository.findByName("ROLE_USER");
         if (defaultRole == null) {
@@ -97,7 +111,7 @@ public class ScientificUserService {
             roleRepository.save(defaultRole);
         }
 
-        // Назначаем роль как одиночное поле (не Set)
+        // Назначаем роль пользователю
         user.setRole(defaultRole);
 
         // Сохраняем пользователя с ролью
@@ -130,10 +144,26 @@ public class ScientificUserService {
         Role persistedRole = roleRepository.findById(role.getId())
                 .orElseThrow(() -> new IllegalArgumentException("Role not found"));
 
-        // Назначаем роль как одиночное поле (не Set)
+        // Назначаем роль пользователю
         user.setRole(persistedRole);
 
         // Сохраняем пользователя с ролью
         return scientificUserRepository.save(user);
     }
+
+
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Optional<ScientificUser> scientificUser = scientificUserRepository.findByUsername(username);
+
+        // Если пользователь не найден
+        if (scientificUser.isEmpty()) {
+            throw new UsernameNotFoundException("User not found!");
+        }
+
+        // Возвращаем пользовательские данные
+        return new CustomUserDetails(scientificUser.get());
+    }
+
+
+
 }

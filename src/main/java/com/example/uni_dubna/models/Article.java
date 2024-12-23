@@ -1,15 +1,23 @@
 package com.example.uni_dubna.models;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "articles")
 public class Article {
-
+    public Article() {
+        this.createdAt = LocalDateTime.now();
+    }
+    private LocalDateTime createdAt;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @NotEmpty(message = "Заголовок не может быть пустым")
+    @Size(max = 255, message = "Заголовок не может превышать 255 символов")
     private String title;
     private String annotation;
 
@@ -18,12 +26,16 @@ public class Article {
 
     private String rubric; // Рубрика для статьи
 
-    @ManyToOne(cascade = CascadeType.ALL)  // Cascade на авторе, если он удаляется
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false) // Cascade на авторе, если он удаляется
     private ScientificUser author;
 
     @ElementCollection(fetch = FetchType.LAZY) // Ленивая загрузка для списка соавторов
     private List<String> coAuthors;
 
+    @Lob
+    @NotEmpty(message = "Содержание не может быть пустым")
+    private String content;
     @Lob
     private byte[] document;  // Хранение файла статьи
 

@@ -3,7 +3,7 @@ package com.example.uni_dubna.controllers;
 import com.example.uni_dubna.models.Role;
 import com.example.uni_dubna.models.ScientificUser;
 import com.example.uni_dubna.service.RoleService;
-import com.example.uni_dubna.service.ScientificUserService;
+import com.example.uni_dubna.service.impl.ScientificUserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,11 +16,11 @@ import org.springframework.ui.Model;
 @RequestMapping("/users")
 public class ScientificUserController {
 
-    private final ScientificUserService userService;
+    private final ScientificUserServiceImpl userService;
     private final RoleService roleService;
 
     @Autowired
-    public ScientificUserController(ScientificUserService userService, RoleService roleService) {
+    public ScientificUserController(ScientificUserServiceImpl userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
     }

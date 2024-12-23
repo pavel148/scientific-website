@@ -5,22 +5,34 @@ import com.example.uni_dubna.repo.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class ArticleService {
+import java.util.List;
 
-    private final ArticleRepository articleRepository;
-    @Autowired
-    public ArticleService(ArticleRepository articleRepository) {
-        this.articleRepository = articleRepository;
-    }
+public interface ArticleService {
 
-    public void uploadArticle(Article article) {
-        article = new Article();
-        // Логика преобразования DTO в сущность
-        articleRepository.save(article);
-    }
+    /**
+     * Создает новую статью.
+     *
+     * @param article статья для создания
+     * @param authorUsername имя пользователя автора
+     * @return созданная статья
+     */
+    Article createArticle(Article article, String authorUsername);
 
-    public Article getArticleById(Long id) throws Throwable {
-        return (Article) articleRepository.findById(id).orElseThrow(() -> new RuntimeException("Article not found"));
-    }
+    /**
+     * Находит все статьи, написанные данным автором.
+     *
+     * @param authorUsername имя пользователя автора
+     * @return список статей
+     */
+    List<Article> findArticlesByAuthor(String authorUsername);
+
+    /**
+     * Находит статью по ее ID.
+     *
+     * @param id идентификатор статьи
+     * @return статья
+     */
+    Article findArticleById(Long id);
+
+    // Добавьте дополнительные методы по необходимости (редактирование, удаление и т.д.)
 }
