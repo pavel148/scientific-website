@@ -1,32 +1,110 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
+    <meta charset="UTF-8">
     <title>Управление Ролями</title>
+    <!-- Встроенные стили -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        button {
+            padding: 12px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error-message, .success-message {
+            color: #f44336;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .success-message {
+            color: #4CAF50;
+        }
+    </style>
+    <!-- Подключение Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<div th:replace="layout :: content">
+<div class="container">
     <h1>Управление Ролями</h1>
+    <!-- Общие сообщения об ошибках или успехе -->
+    <div th:if="${error}" class="error-message">
+        <p th:text="${error}"></p>
+    </div>
+    <div th:if="${success}" class="success-message">
+        <p th:text="${success}"></p>
+    </div>
 
-    <!-- Форма для создания новой роли -->
+    <!-- Форма создания новой роли -->
     <form th:action="@{/admin/roles}" th:object="${role}" method="post">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
         <div>
-            <label for="name">Название роли:</label>
-            <input type="text" id="name" th:field="*{name}" required />
-            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Ошибка названия роли</div>
+            <label for="name">Название Роли:</label>
+            <input type="text" id="name" th:field="*{name}" placeholder="Введите название роли" />
+            <div th:if="${#fields.hasErrors('name')}" class="error-message" th:errors="*{name}">Ошибка имени роли</div>
         </div>
         <button type="submit">Создать Роль</button>
     </form>
 
-    <!-- Отображение ошибок -->
-    <div th:if="${error}">
-        <p th:text="${error}"></p>
-    </div>
-
     <!-- Список существующих ролей -->
     <h2>Существующие Роли</h2>
     <ul>
-        <li th:each="role : ${roles}" th:text="${role.name}">Role Name</li>
+        <li th:each="role : ${roles}" th:text="${role.name}">Название роли</li>
     </ul>
 </div>
 </body>

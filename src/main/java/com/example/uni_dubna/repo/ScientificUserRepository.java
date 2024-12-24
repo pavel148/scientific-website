@@ -19,4 +19,10 @@ public interface ScientificUserRepository extends JpaRepository<ScientificUser, 
     boolean existsByUsername(String username);
 
     List<ScientificUser> findAll();
+
+
+
+
+
+
 }

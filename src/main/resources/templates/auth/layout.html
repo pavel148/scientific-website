@@ -1,0 +1,66 @@
+<!-- src/main/resources/templates/layout.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Научный Журнал</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a th:href="@{/home}">Главная</a></li>
+            <li><a th:href="@{/public/info}">Информация</a></li>
+
+            <!-- Ссылки для аутентифицированных пользователей -->
+            <li sec:authorize="isAuthenticated()">
+                <a th:href="@{/account}">Личный Кабинет</a>
+            </li>
+
+            <!-- Административные ссылки -->
+            <li sec:authorize="hasRole('ADMIN') or hasRole('SYS_ADMIN')">
+                <a th:href="@{/admin/roles}">Управление Ролями</a>
+            </li>
+            <li sec:authorize="hasRole('ADMIN') or hasRole('SYS_ADMIN')">
+                <a th:href="@{/admin/users}">Управление Пользователями</a>
+            </li>
+
+            <!-- Ссылки для авторов -->
+            <li sec:authorize="hasRole('AUTHOR')">
+                <a th:href="@{/author/articles}">Мои Статьи</a>
+            </li>
+            <li sec:authorize="hasRole('AUTHOR')">
+                <a th:href="@{/author/articles/new}">Создать Статью</a>
+            </li>
+
+            <!-- Ссылки для рецензентов -->
+            <li sec:authorize="hasRole('REVIEWER')">
+                <a th:href="@{/reviewer/reviews}">Мои Рецензии</a>
+            </li>
+
+            <!-- Ссылки для SYS_ADMIN -->
+            <li sec:authorize="hasRole('SYS_ADMIN')">
+                <a th:href="@{/sysadmin/settings}">Настройки Системы</a>
+            </li>
+
+            <!-- Аутентификация -->
+            <li sec:authorize="isAnonymous()">
+                <a th:href="@{/auth/login}">Войти</a>
+            </li>
+            <li sec:authorize="isAuthenticated()">
+                <a th:href="@{/auth/logout}">Выйти</a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <div th:replace="${content}">Загрузка...</div>
+</main>
+
+<footer>
+    <p>&copy; 2024 Научный Журнал</p>
+</footer>
+</body>
+</html>

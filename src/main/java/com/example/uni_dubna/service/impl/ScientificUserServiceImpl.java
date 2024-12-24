@@ -8,12 +8,14 @@ import com.example.uni_dubna.security.CustomUserDetails;
 import com.example.uni_dubna.service.interfaces.ScientificUserService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -164,6 +166,8 @@ public class ScientificUserServiceImpl implements ScientificUserService {
         return new CustomUserDetails(scientificUser.get());
     }
 
-
-
+    @Bean
+    public List<ScientificUser> getAllUser() {
+        return scientificUserRepository.findAll();
+    }
 }

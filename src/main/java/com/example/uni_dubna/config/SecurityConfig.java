@@ -77,7 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .csrf()
-                .disable(); // Включите CSRF защиту в реальном приложении
+                ; // Включите CSRF защиту в реальном приложении
     }
 
     @Override

@@ -3,10 +3,10 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Научный журнал - [[${title}]]</title>
-    <!-- Встроенные стили или подключение внешнего CSS -->
+    <title>Выход из системы</title>
+    <!-- Встроенные стили -->
     <style>
-        /* Общие стили для макета */
+        /* Основные стили для страницы */
         body {
             font-family: 'Roboto', sans-serif;
             margin: 0;
@@ -22,7 +22,7 @@
             padding: 20px;
         }
 
-        /* Стили для хедера и навигации */
+        /* Стили для хедера */
         .header {
             background-color: #4CAF50;
             color: #fff;
@@ -36,7 +36,7 @@
             text-align: center;
         }
 
-        /* Стили для навигационного меню */
+        /* Стили для навигации */
         .nav ul {
             list-style: none;
             padding: 0;
@@ -60,13 +60,13 @@
         }
 
         /* Стили для формы Logout */
-        .logout-form {
+        .header form {
             position: absolute;
             top: 20px;
             right: 20px;
         }
 
-        .logout-form input[type="submit"] {
+        .header form input[type="submit"] {
             background-color: #f44336;
             color: #fff;
             border: none;
@@ -77,7 +77,7 @@
             transition: background-color 0.3s ease;
         }
 
-        .logout-form input[type="submit"]:hover {
+        .header form input[type="submit"]:hover {
             background-color: #da190b;
         }
 
@@ -86,6 +86,34 @@
             background-color: #fff;
             padding: 40px 0;
             margin-top: 20px;
+        }
+
+        main .container {
+            text-align: center;
+        }
+
+        main h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        main p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 15px 30px;
+            text-decoration: none;
+            font-size: 1em;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background-color: #45a049;
         }
 
         /* Стили для футера */
@@ -104,7 +132,7 @@
                 margin: 10px 0;
             }
 
-            .logout-form {
+            .header form {
                 position: static;
                 margin-top: 10px;
                 text-align: center;
@@ -121,21 +149,10 @@
         <nav class="nav">
             <ul>
                 <li><a href="/" th:href="@{/}">Главная</a></li>
-                <li><a href="/public/info" th:href="@{/public/info}">Информация</a></li>
-                <li><a href="/submit" th:href="@{/submit}">Отправить статью</a></li>
-                <li><a href="/contact" th:href="@{/contact}">Контакты</a></li>
-                <!-- Ссылки, доступные только для ADMIN -->
-                <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/admin/dashboard}">Админка</a></li>
-                <!-- Ссылки, доступные только для AUTHOR -->
-                <li sec:authorize="hasRole('AUTHOR')"><a th:href="@{/author/articles}">Мои статьи</a></li>
-                <!-- Ссылки, доступные только для REVIEWER -->
-                <li sec:authorize="hasRole('REVIEWER')"><a th:href="@{/reviewer/reviews}">Мои рецензии</a></li>
-                <!-- Ссылки, доступные только для SYS_ADMIN (если есть) -->
-                <li sec:authorize="hasRole('SYS_ADMIN')"><a th:href="@{/sysadmin/dashboard}">Системная Админка</a></li>
             </ul>
         </nav>
         <!-- Форма Logout с CSRF токеном и правильным маршрутом -->
-        <form th:action="@{/auth/logout}" th:method="POST" class="logout-form">
+        <form th:action="@{/auth/logout}" th:method="POST">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <input type="submit" value="Logout">
         </form>
@@ -144,8 +161,9 @@
 
 <main>
     <div class="container">
-        <!-- Вставка содержимого конкретной страницы -->
-        <div th:replace="~{::content}"></div>
+        <h2>Вы успешно вышли из системы</h2>
+        <p>Спасибо за использование нашего сервиса.</p>
+        <a href="/" th:href="@{/}" class="cta-button">На главную</a>
     </div>
 </main>
 

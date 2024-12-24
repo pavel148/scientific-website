@@ -5,6 +5,7 @@ import com.example.uni_dubna.models.ScientificUser;
 import com.example.uni_dubna.repo.RoleRepository;
 import com.example.uni_dubna.repo.ScientificUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,6 +70,7 @@ public class RoleService {
         return roleRepository.findAll(); // Здесь вы получаете все роли
     }
 
+    @Bean
     public List<ScientificUser> getAllUsers() {
         return scientificUserRepository.findAll();
     }
@@ -80,5 +82,10 @@ public class RoleService {
                 .orElseThrow(() -> new IllegalArgumentException("Роль не найдена"));
         user.setRole(role);
         scientificUserRepository.save(user);
+    }
+
+
+    public Role findByName(String roleName) {
+        return roleRepository.findByName(roleName);
     }
 }

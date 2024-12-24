@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Тест Поиска Пользователя</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h2>Результат Поиска Пользователя</h2>
+    <div th:if="${user != null}">
+        <p>ID: <span th:text="${user.id}"></span></p>
+        <p>Имя пользователя: <span th:text="${user.username}"></span></p>
+        <p>Роль: <span th:text="${user.role.name}"></span></p>
+    </div>
+    <div th:if="${user == null}">
+        <p>Пользователь не найден.</p>
+    </div>
+</div>
+</body>
+</html>

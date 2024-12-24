@@ -1,27 +1,162 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
+    <meta charset="UTF-8">
     <title>Регистрация</title>
+    <!-- Встроенные стили -->
+    <style>
+        /* Основные стили для страницы */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        /* Стили для заголовка */
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 30px;
+        }
+
+        /* Стили для формы */
+        form div {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        /* Стили для кнопки */
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Стили для сообщений об ошибках */
+        .error-message {
+            color: #f44336;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        /* Стили для общего сообщения об ошибке */
+        .general-error {
+            color: #f44336;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        /* Стили для ссылок */
+        .redirect-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .redirect-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Медиа-запросы для адаптивности */
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                margin: 20px auto;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+    <!-- Подключение Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<h1>Регистрация</h1>
-<form th:action="@{/auth/register}" th:object="${scientificUser}" method="post">
-    <div>
-        <label for="username">Имя пользователя:</label>
-        <input type="text" id="username" th:field="*{username}" />
-        <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Имя пользователя ошибка</div>
-    </div>
-    <div>
-        <label for="password">Пароль:</label>
-        <input type="password" id="password" th:field="*{password}" />
-        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Пароль ошибка</div>
-    </div>
-    <div>
-        <button type="submit">Зарегистрироваться</button>
-    </div>
-    <div th:if="${error}">
-        <p th:text="${error}"></p>
-    </div>
-</form>
+<div class="container">
+    <h1>Регистрация</h1>
+    <form th:action="@{/auth/register}" th:object="${scientificUser}" method="post">
+        <!-- Общее сообщение об ошибке -->
+        <div th:if="${error}" class="general-error">
+            <p th:text="${error}"></p>
+        </div>
+
+        <!-- Поле для имени пользователя -->
+        <div>
+            <label for="username">Имя пользователя:</label>
+            <input type="text" id="username" th:field="*{username}" placeholder="Введите ваше имя пользователя" />
+            <div th:if="${#fields.hasErrors('username')}" class="error-message" th:errors="*{username}">Имя пользователя ошибка</div>
+        </div>
+
+        <!-- Поле для пароля -->
+        <div>
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" th:field="*{password}" placeholder="Введите ваш пароль" />
+            <div th:if="${#fields.hasErrors('password')}" class="error-message" th:errors="*{password}">Пароль ошибка</div>
+        </div>
+
+        <!-- Кнопка регистрации -->
+        <div>
+            <button type="submit">Зарегистрироваться</button>
+        </div>
+
+        <!-- Ссылка на страницу входа -->
+        <a href="/auth/login" class="redirect-link">Уже есть аккаунт? Войти</a>
+    </form>
+</div>
 </body>
 </html>

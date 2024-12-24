@@ -1,12 +1,114 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Панель администратора</title>
+    <title>Админка - Панель Управления</title>
+    <!-- Встроенные стили -->
+    <style>
+        /* Основные стили для страницы */
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        /* Стили для заголовка */
+        h1 {
+            text-align: center;
+            color: #4CAF50;
+            margin-bottom: 30px;
+        }
+
+        /* Стили для меню внутри админки */
+        .admin-nav ul {
+            list-style: none;
+            padding: 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .admin-nav ul li {
+            display: inline-block;
+            margin: 0 15px;
+        }
+
+        .admin-nav ul li a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .admin-nav ul li a:hover {
+            background-color: #4CAF50;
+            color: #fff;
+        }
+
+        /* Стили для содержимого */
+        .content {
+            text-align: center;
+        }
+
+        .content p {
+            font-size: 1.2em;
+        }
+
+        /* Стили для футера */
+        .footer {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+
+        /* Медиа-запросы для адаптивности */
+        @media (max-width: 768px) {
+            .admin-nav ul li {
+                display: block;
+                margin: 10px 0;
+            }
+        }
+    </style>
+    <!-- Подключение Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<h1>Панель администратора</h1>
-<p>Добро пожаловать, администратор! Управляйте пользователями, назначайте роли и отслеживайте статьи.</p>
+<div class="container">
+    <h1>Панель Управления Администратора</h1>
+    <nav class="admin-nav">
+        <ul>
+            <li><a href="/admin/roles" th:href="@{/admin/roles}">Управление Ролями</a></li>
+            <li><a href="/admin/users" th:href="@{/admin/users}">Управление Пользователями</a></li>
+            <!-- Добавьте другие ссылки по мере необходимости -->
+        </ul>
+    </nav>
+    <div class="content">
+        <p>Добро пожаловать в админ-панель. Здесь вы можете управлять ролями и пользователями.</p>
+        <!-- Добавьте дополнительный контент по мере необходимости -->
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2024 Научный журнал. Все права защищены.</p>
+    </div>
+</footer>
 </body>
 </html>

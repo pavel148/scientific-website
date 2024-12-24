@@ -50,6 +50,7 @@ public class UniDubnaApplication {
 				// Сохраняем пользователя в базе данных
 				scientificUserRepository.save(user);
 			}
+
 		};
 	}
 

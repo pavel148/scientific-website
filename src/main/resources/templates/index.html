@@ -1,17 +1,205 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Научный журнал</title>
-  <link rel="stylesheet" href="styles.css">
+  <!-- Встроенные стили -->
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 20px 0;
+    }
+
+    .header .logo {
+      margin: 0;
+      font-size: 2em;
+      text-align: center;
+    }
+
+    .nav ul {
+      list-style: none;
+      padding: 0;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .nav ul li {
+      display: inline-block;
+      margin: 0 15px;
+    }
+
+    .nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .nav ul li a:hover {
+      text-decoration: underline;
+    }
+
+    .hero {
+      background-color: #fff;
+      padding: 60px 0;
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    .hero p {
+      font-size: 1.2em;
+      margin-bottom: 30px;
+    }
+
+    .cta-button {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 15px 30px;
+      text-decoration: none;
+      font-size: 1em;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .cta-button:hover {
+      background-color: #45a049;
+    }
+
+    .about, .articles, .submit {
+      background-color: #fff;
+      padding: 40px 0;
+      margin-top: 20px;
+    }
+
+    .about h2, .articles h2, .submit h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 2em;
+    }
+
+    .about p, .submit p {
+      text-align: center;
+      font-size: 1.1em;
+      max-width: 800px;
+      margin: 0 auto 20px auto;
+    }
+
+    .articles .article-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .article {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 5px;
+      width: 300px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .article h3 {
+      margin-top: 0;
+      font-size: 1.5em;
+    }
+
+    .article p {
+      font-size: 1em;
+      margin-bottom: 15px;
+    }
+
+    .article .read-more {
+      text-decoration: none;
+      color: #4CAF50;
+      font-weight: bold;
+    }
+
+    .article .read-more:hover {
+      text-decoration: underline;
+    }
+
+    .footer {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 20px 0;
+      margin-top: 40px;
+    }
+
+    /* Дополнительные стили для формы Logout */
+    .header form {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .header form input[type="submit"] {
+      background-color: #f44336;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
+    }
+
+    .header form input[type="submit"]:hover {
+      background-color: #da190b;
+    }
+
+    /* Медиа-запросы для адаптивности */
+    @media (max-width: 768px) {
+      .nav ul li {
+        display: block;
+        margin: 10px 0;
+      }
+
+      .articles .article-list {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .header form {
+        position: static;
+        margin-top: 10px;
+        text-align: center;
+      }
+    }
+  </style>
+  <!-- Подключение Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 <header class="header">
   <div class="container">
     <h1 class="logo">Научный журнал</h1>
-    <form th:action="@{/logout}" th:method="POST">
+
+    <!-- Форма Logout с CSRF токеном и правильным маршрутом -->
+    <form th:action="@{/auth/logout}" th:method="POST">
+      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
       <input type="submit" value="Logout">
     </form>
 
@@ -21,6 +209,10 @@
         <li><a href="#articles">Статьи</a></li>
         <li><a href="#submit">Отправить статью</a></li>
         <li><a href="#contact">Контакты</a></li>
+        <!-- Ссылки, доступные только для ADMIN -->
+        <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/admin/dashboard}">Админка</a></li>
+        <!-- Ссылки, доступные только для USER -->
+        <li sec:authorize="hasRole('USER')"><a th:href="@{/user/profile}">Профиль</a></li>
       </ul>
     </nav>
   </div>

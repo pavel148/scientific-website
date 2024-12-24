@@ -2,6 +2,7 @@ package com.example.uni_dubna.controllers;
 
 import com.example.uni_dubna.models.Role;
 import com.example.uni_dubna.service.RoleService;
+import com.example.uni_dubna.service.impl.ScientificUserServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,9 +18,12 @@ public class AdminController {
 
     private final RoleService roleService;
 
+    private final ScientificUserServiceImpl userService;
+
     @Autowired
-    public AdminController(RoleService roleService) {
+    public AdminController(RoleService roleService, ScientificUserServiceImpl userService) {
         this.roleService = roleService;
+        this.userService = userService;
     }
 
     @GetMapping("/roles")
@@ -28,6 +32,7 @@ public class AdminController {
         model.addAttribute("role", new Role());
         return "admin/roles"; // Создайте шаблон admin/roles.html
     }
+
 
     @PostMapping("/roles")
     public String createRole(@ModelAttribute("role") @Valid Role role, BindingResult result, Model model) {
@@ -51,10 +56,17 @@ public class AdminController {
     // Контроллер для Управления Пользователями
     @GetMapping("/users")
     public String manageUsers(Model model) {
-        model.addAttribute("users", roleService.getAllUsers()); // Добавьте метод getAllUsers() в RoleService или отдельный UserService
+        model.addAttribute("users", userService.getAllUser()); // Добавьте метод getAllUsers() в RoleService или отдельный UserService
         model.addAttribute("roles", roleService.getAllRoles());
         return "admin/users"; // Создайте шаблон admin/users.html
     }
+
+//    @GetMapping("/users")
+//    public String manageUsers(Model model) {
+//        model.addAttribute("users", userService.getAllUser()); // Предполагается, что метод getAllUsers() существует
+//        return "admin/users"; // Шаблон admin/users.html
+//    }
+
 
     @PostMapping("/users/assign-role")
     public String assignRoleToUser(@RequestParam("userId") Long userId,
@@ -66,5 +78,16 @@ public class AdminController {
             model.addAttribute("error", "Ошибка при назначении роли");
         }
         return "redirect:/admin/users";
+    }
+
+    @GetMapping("/dashboard")
+    public String adminDashboard() {
+        return "admin/dashboard"; // Убедитесь, что шаблон admin/dashboard.html существует
+    }
+
+
+    @GetMapping("/")
+    public String adminMenu(Model model) {
+        return "admin/dashboard"; // Создайте шаблон admin/roles.html
     }
 }
