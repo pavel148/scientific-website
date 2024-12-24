@@ -152,7 +152,7 @@
                 <li><a href="/submit" th:href="@{/submit}">Отправить статью</a></li>
                 <li><a href="/contact" th:href="@{/contact}">Контакты</a></li>
                 <!-- Ссылки, доступные только для ADMIN -->
-                <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/admin/dashboard.html}">Админка</a></li>
+                <li sec:authorize="hasRole('ADMIN')"><a th:href="@{/admin/dashboard}">Админка</a></li>
                 <!-- Ссылки, доступные только для AUTHOR -->
                 <li sec:authorize="hasRole('AUTHOR')"><a th:href="@{/author/articles}">Мои статьи</a></li>
                 <!-- Ссылки, доступные только для REVIEWER -->
