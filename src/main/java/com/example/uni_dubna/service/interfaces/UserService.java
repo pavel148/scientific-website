@@ -12,4 +12,7 @@ public interface UserService {
     ScientificUser createUser(String username, String password, String roleName) throws Exception;
     boolean existsByUsername(String username);
     void assignRoleToUser(Long userId, Long roleId);
+
+
+
 }

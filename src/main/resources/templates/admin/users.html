@@ -1,15 +1,110 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Управление Пользователями</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even){
+            background-color: #f2f2f2;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #6b8cff, #88aaff);
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            font-size: 1em;
+        }
+
+        .cta-button:hover {
+            background: linear-gradient(45deg, #5a7cd8, #779be3);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+
+        .error-message, .success-message {
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        /* Мобильные стили */
+        @media (max-width: 768px) {
+            table, th, td {
+                font-size: 0.9em;
+            }
+
+            .cta-button {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
 </head>
 <body>
-<div th:fragment="content">
+<div class="container">
     <h2>Управление Пользователями</h2>
 
-    <!-- Общие сообщения об ошибках или успехе -->
+    <!-- Сообщения об ошибках или успехе -->
     <div th:if="${error}" class="error-message">
         <p th:text="${error}"></p>
     </div>
@@ -18,7 +113,7 @@
     </div>
 
     <!-- Форма создания нового пользователя -->
-    <form th:action="@{/users/create}" method="post">
+    <form th:action="@{/admin/users/create}" method="post">
         <div>
             <label for="username">Имя пользователя:</label>
             <input type="text" id="username" name="username" placeholder="Введите имя пользователя" required />
@@ -29,26 +124,33 @@
         </div>
         <div>
             <label for="roleName">Роль:</label>
-            <input type="text" id="roleName" name="roleName" placeholder="Введите роль пользователя" required />
+            <select id="roleName" name="roleName" required>
+                <option value="ROLE_USER">Пользователь</option>
+                <option value="ROLE_AUTHOR">Автор</option>
+                <option value="ROLE_REVIEWER">Рецензент</option>
+                <option value="ROLE_ADMIN">Администратор</option>
+                <!-- Добавьте другие роли по необходимости -->
+            </select>
         </div>
-        <button type="submit">Создать Пользователя</button>
+        <button type="submit" class="cta-button">Создать Пользователя</button>
     </form>
 
     <!-- Список существующих пользователей -->
     <h3>Существующие Пользователи</h3>
-    <table border="1" cellpadding="10" cellspacing="0">
+    <table>
         <thead>
         <tr>
             <th>ID</th>
             <th>Имя пользователя</th>
             <th>Роль</th>
+            <!-- Добавьте другие столбцы по необходимости -->
         </tr>
         </thead>
         <tbody>
         <tr th:each="user : ${users}">
             <td th:text="${user.id}">1</td>
             <td th:text="${user.username}">username</td>
-            <td th:text="${user.role.name}">ROLE_USER</td>
+            <td th:text="${user.role != null ? user.role.name : 'Нет роли'}">ROLE_USER</td>
         </tr>
         </tbody>
     </table>

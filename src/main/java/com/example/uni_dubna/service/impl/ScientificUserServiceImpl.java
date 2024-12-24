@@ -166,8 +166,25 @@ public class ScientificUserServiceImpl implements ScientificUserService {
         return new CustomUserDetails(scientificUser.get());
     }
 
+
+    @Transactional
+    public void assignRoleToUser(Long userId, Long roleId) {
+        ScientificUser user = scientificUserRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Пользователь не найден"));
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new IllegalArgumentException("Роль не найдена"));
+        user.setRole(role);
+        scientificUserRepository.save(user);
+    }
+
     @Bean
     public List<ScientificUser> getAllUser() {
         return scientificUserRepository.findAll();
     }
+
+
+
+
+
+
 }

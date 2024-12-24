@@ -7,6 +7,7 @@
   <title>Научный журнал</title>
   <!-- Встроенные стили -->
   <style>
+    /* Общие стили */
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
@@ -22,23 +23,31 @@
       padding: 20px;
     }
 
+    /* Заголовок (Header) */
     .header {
       background-color: #4CAF50;
       color: #fff;
       padding: 20px 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
     }
 
     .header .logo {
       margin: 0;
       font-size: 2em;
       text-align: center;
+      flex: 1 1 100%;
     }
 
     .nav ul {
       list-style: none;
       padding: 0;
       text-align: center;
-      margin-top: 10px;
+      margin: 10px 0;
+      flex: 1 1 100%;
     }
 
     .nav ul li {
@@ -50,52 +59,120 @@
       color: #fff;
       text-decoration: none;
       font-weight: bold;
+      position: relative;
+      padding: 5px 0;
+      transition: color 0.3s ease;
     }
 
-    .nav ul li a:hover {
-      text-decoration: underline;
+    .nav ul li a::after {
+      content: '';
+      display: block;
+      width: 0;
+      height: 2px;
+      background: #fff;
+      transition: width .3s;
+      position: absolute;
+      bottom: 0;
+      left: 0;
     }
 
+    .nav ul li a:hover::after {
+      width: 100%;
+    }
+
+    /* Кнопки аутентификации */
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+      flex: 1 1 100%;
+      justify-content: center;
+      margin-top: 10px;
+    }
+
+    .auth-buttons a, .logout-form input[type="submit"] {
+      padding: 12px 25px;
+      background: linear-gradient(45deg, #6b8cff, #88aaff);
+      color: #fff;
+      text-decoration: none;
+      font-size: 1em;
+      border: none;
+      border-radius: 25px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.3s ease, background 0.3s ease;
+      display: inline-block;
+    }
+
+    .auth-buttons a:hover, .logout-form input[type="submit"]:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      background: linear-gradient(45deg, #5a7cd8, #779be3);
+    }
+
+    /* Специфические стили для Logout */
+    .logout-form input[type="submit"] {
+      background: linear-gradient(45deg, #ff6b6b, #ff8787);
+      border-radius: 25px;
+    }
+
+    .logout-form input[type="submit"]:hover {
+      background: linear-gradient(45deg, #e55a5a, #e58787);
+    }
+
+    /* Раздел Hero */
     .hero {
       background-color: #fff;
       padding: 60px 0;
       text-align: center;
+      background-image: url('https://via.placeholder.com/1200x400'); /* Пример фона */
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+
+    .hero > .container {
+      position: relative;
+      z-index: 2;
     }
 
     .hero h2 {
       font-size: 2.5em;
       margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
     }
 
     .hero p {
       font-size: 1.2em;
       margin-bottom: 30px;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
     }
 
-    .cta-button {
-      background-color: #4CAF50;
-      color: #fff;
-      padding: 15px 30px;
-      text-decoration: none;
-      font-size: 1em;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
-    }
-
-    .cta-button:hover {
-      background-color: #45a049;
-    }
-
+    /* Раздел About */
     .about, .articles, .submit {
       background-color: #fff;
       padding: 40px 0;
       margin-top: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-radius: 8px;
     }
 
     .about h2, .articles h2, .submit h2 {
       text-align: center;
       margin-bottom: 20px;
       font-size: 2em;
+      color: #333;
     }
 
     .about p, .submit p {
@@ -103,8 +180,10 @@
       font-size: 1.1em;
       max-width: 800px;
       margin: 0 auto 20px auto;
+      line-height: 1.6;
     }
 
+    /* Раздел Articles */
     .articles .article-list {
       display: flex;
       flex-wrap: wrap;
@@ -115,59 +194,57 @@
     .article {
       background-color: #f9f9f9;
       padding: 20px;
-      border-radius: 5px;
+      border-radius: 8px;
       width: 300px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .article:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
     }
 
     .article h3 {
       margin-top: 0;
       font-size: 1.5em;
+      color: #4CAF50;
     }
 
     .article p {
       font-size: 1em;
       margin-bottom: 15px;
+      color: #555;
     }
 
     .article .read-more {
       text-decoration: none;
       color: #4CAF50;
       font-weight: bold;
+      transition: color 0.3s ease;
     }
 
     .article .read-more:hover {
-      text-decoration: underline;
+      color: #388E3C;
     }
 
+    /* Раздел Submit */
+    .submit .cta-button {
+      background: linear-gradient(45deg, #FF9800, #FFB74D);
+      color: #fff;
+    }
+
+    .submit .cta-button:hover {
+      background: linear-gradient(45deg, #FB8C00, #FFA726);
+    }
+
+    /* Футер */
     .footer {
       background-color: #333;
       color: #fff;
       text-align: center;
       padding: 20px 0;
       margin-top: 40px;
-    }
-
-    /* Дополнительные стили для формы Logout */
-    .header form {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-    }
-
-    .header form input[type="submit"] {
-      background-color: #f44336;
-      color: #fff;
-      border: none;
-      padding: 10px 20px;
-      cursor: pointer;
-      border-radius: 5px;
-      font-size: 1em;
-      transition: background-color 0.3s ease;
-    }
-
-    .header form input[type="submit"]:hover {
-      background-color: #da190b;
     }
 
     /* Медиа-запросы для адаптивности */
@@ -187,6 +264,10 @@
         margin-top: 10px;
         text-align: center;
       }
+
+      .auth-buttons {
+        flex-direction: column;
+      }
     }
   </style>
   <!-- Подключение Google Fonts -->
@@ -197,12 +278,7 @@
   <div class="container">
     <h1 class="logo">Научный журнал</h1>
 
-    <!-- Форма Logout с CSRF токеном и правильным маршрутом -->
-    <form th:action="@{/auth/logout}" th:method="POST">
-      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-      <input type="submit" value="Logout">
-    </form>
-
+    <!-- Навигационное меню -->
     <nav class="nav">
       <ul>
         <li><a href="#about">О журнале</a></li>
@@ -215,6 +291,26 @@
         <li sec:authorize="hasRole('USER')"><a th:href="@{/user/profile}">Профиль</a></li>
       </ul>
     </nav>
+
+    <!-- Кнопки "Регистрация" и "Вход" для неаутентифицированных пользователей -->
+    <div class="auth-buttons">
+      <!-- Кнопка "Регистрация" -->
+      <div sec:authorize="isAnonymous()">
+        <a href="/auth/register" class="cta-button">Регистрация</a>
+      </div>
+      <!-- Кнопка "Вход" -->
+      <div sec:authorize="isAnonymous()">
+        <a href="/auth/login" class="cta-button">Вход</a>
+      </div>
+    </div>
+
+    <!-- Форма Logout с CSRF токеном и правильным маршрутом для аутентифицированных пользователей -->
+    <div class="logout-form" sec:authorize="isAuthenticated()">
+      <form th:action="@{/auth/logout}" th:method="POST">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <input type="submit" value="Logout" class="cta-button logout-button">
+      </form>
+    </div>
   </div>
 </header>
 
